@@ -1,18 +1,31 @@
 #[macro_use]
 extern crate glium;
 extern crate cgmath;
+extern crate obj;
 
 use cgmath::{Vector4, Matrix4};
+use std::fs::File;
+use std::io::BufReader;
+use obj::*;
 
 #[derive(Copy, Clone)]
-struct Vertex {
+struct MyVertex {
     position: [f32; 4],
+    normal: [f32; 3],
 }
 
-fn to_vertex(obj: Vec<Vector4<f32>>) -> Vec<Vertex> {
+fn to_vertex(obj: Vec<Vector4<f32>>) -> Vec<MyVertex> {
     let mut result = Vec::new();
     for v in obj {
-        result.push(Vertex {position: [v.x, v.y, v.z, v.w]});
+        result.push(MyVertex {position: [v.x, v.y, v.z, v.w], normal: [0.0, 0.0, 0.0]});
+    }
+    return result;
+}
+
+fn obj_to_vertex(obj: Vec<Vertex>) -> Vec<MyVertex> {
+    let mut result = Vec::new();
+    for v in obj {
+        result.push(MyVertex {position: [v.position[0], v.position[1], v.position[2], 1.0], normal: v.normal});
     }
     return result;
 }
@@ -42,6 +55,7 @@ fn scale(x: f32, y: f32, z: f32) -> Matrix4<f32> {
         0.0, 0.0, 0.0, 1.0
     )
 }
+
 
 #[derive(Clone)]
 struct MatrixStack {
@@ -108,7 +122,7 @@ fn main() {
     use glium::{DisplayBuild, Surface};
     let display = glium::glutin::WindowBuilder::new().build_glium().unwrap();
 
-    implement_vertex!(Vertex, position);
+    implement_vertex!(MyVertex, position, normal);
 
     // body
     let body = vec![
@@ -147,9 +161,16 @@ fn main() {
         4, 5, 1, 4, 1, 0]
     ).unwrap();
 
+    let input = BufReader::new(File::open("./models/foot.obj").unwrap());
+    let foot: Obj = load_obj(input).unwrap();
+
     let vertex_shader_src = r#"
         #version 330
         in vec4 position;
+        in vec3 normal;
+
+        out vec3 v_normal;
+
         uniform vec3 in_color;
         uniform mat4 view;
         uniform mat4 perspective;
@@ -157,6 +178,7 @@ fn main() {
 
         void main() {
             gl_Position = perspective * view * position;
+            v_normal = normal;
             _in_color = in_color;
         }
     "#;
@@ -164,10 +186,14 @@ fn main() {
     let fragment_shader_src = r#"
         #version 330
         in vec3 _in_color;
+        in vec3 v_normal;
         out vec4 color;
+        uniform vec3 u_light;
 
         void main() {
-            color = vec4(_in_color, 1.0);
+            float brightness = dot(normalize(v_normal), normalize(u_light));
+            vec3 dark_color = 0.6 * _in_color;
+            color = vec4(mix(dark_color, _in_color, brightness), 1.0);
         }
     "#;
 
@@ -207,7 +233,10 @@ fn main() {
         };
 
         target.clear_color_and_depth((0.0, 0.0, 0.0, 1.0), 1.0);
+
+        let light = [0.0, 0.0, 4.0f32];
         
+        /*
         matrix_stack.push(translate(0.0, 0.0, 0.0));
         let body_adjust = to_vertex(transform(matrix_stack.top(), body.clone()));
         let body_buffer = glium::VertexBuffer::new(&display, &body_adjust).unwrap();
@@ -287,8 +316,15 @@ fn main() {
         matrix_stack.pop();
         }
         matrix_stack.pop();
-    }
+        }
         matrix_stack.pop();
+        */
+
+        let left_foot = glium::VertexBuffer::new(&display, &obj_to_vertex(foot.vertices.clone())).unwrap();
+        let foot_indices = glium::IndexBuffer::new( &display, glium::index::PrimitiveType::TrianglesList, &foot.indices).unwrap();
+        target.draw(&left_foot, &foot_indices, &program,
+                    &uniform! { view: view, perspective: perspective, in_color: [1.0, 1.0, 1.0f32], u_light: light},
+                    &params).unwrap();
         target.finish().unwrap();
 
         for ev in display.poll_events() {

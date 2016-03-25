@@ -6,3 +6,4 @@ authors = ["LastOne817 <lastone817@naver.com>"]
 [dependencies]
 glium = "*"
 cgmath = "*"
+obj-rs = "0.4"
