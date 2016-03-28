@@ -227,15 +227,15 @@ fn main() {
             .. Default::default()
         };
 
-        target.clear_color_and_depth((0.0, 0.0, 0.0, 1.0), 1.0);
+        target.clear_color_and_depth((0.5, 0.5, 0.5, 1.0), 1.0);
 
-        let light = [0.0, 3.0, 5.0f32];
+        let light = [1.0, 0.0, 0.0f32];
 
         // body_lower
         matrix_stack.push(translate(2.01, 5.33, 1.13));
         let body_lower_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(body_lower.vertices.clone())).unwrap();
         target.draw(&body_lower_buffer, &body_lower_indices, &program,
-                    &uniform! { view: view, perspective: perspective, in_color: [0.0, 0.2, 0.2f32],
+                    &uniform! { view: view, perspective: perspective, in_color: [0.0, 0.2, 0.2f32], u_light: light,
                     transform: to_uniform(matrix_stack.top())},
                     &params).unwrap();
         {
@@ -254,7 +254,7 @@ fn main() {
                 matrix_stack.push(translate(-2.72, 0.85, -0.73) * rotate(&Vector3::new(-1.0, 0.0, 0.0), arm_angle));
                 let arm_left_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(arm_left.vertices.clone())).unwrap();
                 target.draw(&arm_left_buffer, &arm_left_indices, &program,
-                            &uniform! { view: view, perspective: perspective, in_color: [1.0, 0.03, 0.0f32],
+                            &uniform! { view: view, perspective: perspective, in_color: [1.0, 0.03, 0.0f32], u_light: light,
                             transform: to_uniform(matrix_stack.top())},
                             &params).unwrap();
                 {
@@ -262,7 +262,7 @@ fn main() {
                     matrix_stack.push(translate(0.37, 0.16, -3.54));
                     let gun_left_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(transform(rotate(&Vector3::new(0.0, 0.0, 1.0), t * 7.0), gun.vertices.clone()))).unwrap();
                     target.draw(&gun_left_buffer, &gun_indices, &program,
-                                &uniform! { view: view, perspective: perspective, in_color: [0.2, 0.0, 0.0f32],
+                                &uniform! { view: view, perspective: perspective, in_color: [0.2, 0.0, 0.0f32], u_light: light,
                                 transform: to_uniform(matrix_stack.top())},
                                 &params).unwrap();
                     matrix_stack.pop();
@@ -275,7 +275,7 @@ fn main() {
                 matrix_stack.push(translate(2.72, 0.85, -0.73) * rotate(&Vector3::new(-1.0, 0.0, 0.0), arm_angle));
                 let arm_right_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(arm_right.vertices.clone())).unwrap();
                 target.draw(&arm_right_buffer, &arm_right_indices, &program,
-                            &uniform! { view: view, perspective: perspective, in_color: [1.0, 0.03, 0.0f32],
+                            &uniform! { view: view, perspective: perspective, in_color: [1.0, 0.03, 0.0f32], u_light: light,
                             transform: to_uniform(matrix_stack.top())},
                             &params).unwrap();
                 {
@@ -283,7 +283,7 @@ fn main() {
                     matrix_stack.push(translate(-0.37, 0.16, -3.54));
                     let gun_right_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(transform(rotate(&Vector3::new(0.0, 0.0, 1.0), t * -7.0), gun.vertices.clone()))).unwrap();
                     target.draw(&gun_right_buffer, &gun_indices, &program,
-                                &uniform! { view: view, perspective: perspective, in_color: [0.2, 0.0, 0.0f32],
+                                &uniform! { view: view, perspective: perspective, in_color: [0.2, 0.0, 0.0f32], u_light: light,
                                 transform: to_uniform(matrix_stack.top())},
                                 &params).unwrap();
                     matrix_stack.pop();
@@ -298,7 +298,7 @@ fn main() {
             matrix_stack.push(translate(-2.02, -1.36, 1.33));
             let leg_upper_left_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(leg_upper_left.vertices.clone())).unwrap();
             target.draw(&leg_upper_left_buffer, &leg_upper_left_indices, &program,
-                        &uniform! { view: view, perspective: perspective, in_color: [0.2, 0.1, 0.08f32],
+                        &uniform! { view: view, perspective: perspective, in_color: [0.2, 0.1, 0.08f32], u_light: light,
                         transform: to_uniform(matrix_stack.top())},
                         &params).unwrap();
 
@@ -307,7 +307,7 @@ fn main() {
                 matrix_stack.push(translate(0.0, -1.43, 1.37));
                 let ankle_left_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(ankle.vertices.clone())).unwrap();
                 target.draw(&ankle_left_buffer, &ankle_indices, &program,
-                            &uniform! { view: view, perspective: perspective, in_color: [0.1, 0.05, 0.04f32],
+                            &uniform! { view: view, perspective: perspective, in_color: [0.1, 0.05, 0.04f32], u_light: light,
                             transform: to_uniform(matrix_stack.top())},
                             &params).unwrap();
 
@@ -316,7 +316,7 @@ fn main() {
                     matrix_stack.push(translate(0.0, -1.37, -0.76));
                     let leg_lower_left_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(leg_lower_left.vertices.clone())).unwrap();
                     target.draw(&leg_lower_left_buffer, &leg_lower_left_indices, &program,
-                                &uniform! { view: view, perspective: perspective, in_color: [0.2, 0.0, 0.0f32],
+                                &uniform! { view: view, perspective: perspective, in_color: [0.2, 0.0, 0.0f32], u_light: light,
                                 transform: to_uniform(matrix_stack.top())},
                                 &params).unwrap();
 
@@ -325,7 +325,7 @@ fn main() {
                         matrix_stack.push(translate(0.0, -1.17, -0.81));
                         let foot_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(foot.vertices.clone())).unwrap();
                         target.draw(&foot_buffer, &foot_indices, &program,
-                                    &uniform! { view: view, perspective: perspective, in_color: [0.1, 0.1, 0.1f32],
+                                    &uniform! { view: view, perspective: perspective, in_color: [0.1, 0.1, 0.1f32], u_light: light,
                                     transform: to_uniform(matrix_stack.top())},
                                     &params).unwrap();
 
@@ -342,7 +342,7 @@ fn main() {
             matrix_stack.push(translate(2.02, -1.36, 1.33));
             let leg_upper_right_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(leg_upper_right.vertices.clone())).unwrap();
             target.draw(&leg_upper_right_buffer, &leg_upper_right_indices, &program,
-                        &uniform! { view: view, perspective: perspective, in_color: [0.2, 0.1, 0.08f32],
+                        &uniform! { view: view, perspective: perspective, in_color: [0.2, 0.1, 0.08f32], u_light: light,
                         transform: to_uniform(matrix_stack.top())},
                         &params).unwrap();
 
@@ -351,7 +351,7 @@ fn main() {
                 matrix_stack.push(translate(0.0, -1.43, 1.37));
                 let ankle_right_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(ankle.vertices.clone())).unwrap();
                 target.draw(&ankle_right_buffer, &ankle_indices, &program,
-                            &uniform! { view: view, perspective: perspective, in_color: [0.1, 0.05, 0.04f32],
+                            &uniform! { view: view, perspective: perspective, in_color: [0.1, 0.05, 0.04f32], u_light: light,
                             transform: to_uniform(matrix_stack.top())},
                             &params).unwrap();
 
@@ -360,7 +360,7 @@ fn main() {
                     matrix_stack.push(translate(0.0, -1.37, -0.76));
                     let leg_lower_right_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(leg_lower_right.vertices.clone())).unwrap();
                     target.draw(&leg_lower_right_buffer, &leg_lower_right_indices, &program,
-                                &uniform! { view: view, perspective: perspective, in_color: [0.2, 0.0, 0.0f32],
+                                &uniform! { view: view, perspective: perspective, in_color: [0.2, 0.0, 0.0f32], u_light: light,
                                 transform: to_uniform(matrix_stack.top())},
                                 &params).unwrap();
 
@@ -369,7 +369,7 @@ fn main() {
                         matrix_stack.push(translate(0.0, -1.17, -0.81));
                         let foot_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(foot.vertices.clone())).unwrap();
                         target.draw(&foot_buffer, &foot_indices, &program,
-                                    &uniform! { view: view, perspective: perspective, in_color: [0.1, 0.1, 0.1f32],
+                                    &uniform! { view: view, perspective: perspective, in_color: [0.1, 0.1, 0.1f32], u_light: light,
                                     transform: to_uniform(matrix_stack.top())},
                                     &params).unwrap();
 
