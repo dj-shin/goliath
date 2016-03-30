@@ -82,9 +82,9 @@ impl MatrixStack {
 fn to_uniform(m: Matrix4<f32>) -> [[f32; 4]; 4] {
     [
         [m.x.x, m.x.y, m.x.z, m.x.w],
-    [m.y.x, m.y.y, m.y.z, m.y.w],
-    [m.z.x, m.z.y, m.z.z, m.z.w],
-    [m.w.x, m.w.y, m.w.z, m.w.w],
+        [m.y.x, m.y.y, m.y.z, m.y.w],
+        [m.z.x, m.z.y, m.z.z, m.z.w],
+        [m.w.x, m.w.y, m.w.z, m.w.w],
     ]
 }
 
@@ -239,8 +239,6 @@ fn main() {
                     transform: to_uniform(matrix_stack.top())},
                     &params).unwrap();
         {
-            // let top = matrix_stack.top();
-            // matrix_stack.push(translate(0.1, 1.27, -0.6) * top * rotate(&Vector3::new(0.0, 1.0, 0.0), body_angle) * top.invert().unwrap());
             matrix_stack.push(translate(0.1, 1.27, -0.6) * rotate(&Vector3::new(0.0, 1.0, 0.0), body_angle));
             let body_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(body.vertices.clone())).unwrap();
             target.draw(&body_buffer, &body_indices, &program,
@@ -249,8 +247,6 @@ fn main() {
                         &params).unwrap();
 
             {
-                // let top = matrix_stack.top();
-                // matrix_stack.push(translate(-2.72, 0.85, -0.73) * top * rotate(&Vector3::new(-1.0, 0.0, 0.0), arm_angle) * top.invert().unwrap());
                 matrix_stack.push(translate(-2.72, 0.85, -0.73) * rotate(&Vector3::new(-1.0, 0.0, 0.0), arm_angle));
                 let arm_left_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(arm_left.vertices.clone())).unwrap();
                 target.draw(&arm_left_buffer, &arm_left_indices, &program,
@@ -258,7 +254,6 @@ fn main() {
                             transform: to_uniform(matrix_stack.top())},
                             &params).unwrap();
                 {
-                    // matrix_stack.push(rotate(&Vector3::new(-1.0, 0.0, 0.0), arm_angle) * translate(0.37, 0.16, -3.54) * rotate(&Vector3::new(-1.0, 0.0, 0.0), -arm_angle));
                     matrix_stack.push(translate(0.37, 0.16, -3.54));
                     let gun_left_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(transform(rotate(&Vector3::new(0.0, 0.0, 1.0), t * 7.0), gun.vertices.clone()))).unwrap();
                     target.draw(&gun_left_buffer, &gun_indices, &program,
@@ -270,8 +265,6 @@ fn main() {
                 matrix_stack.pop();
             }
             {
-                // let top = matrix_stack.top();
-                // matrix_stack.push(translate(2.72, 0.85, -0.73) * top * rotate(&Vector3::new(-1.0, 0.0, 0.0), arm_angle) * top.invert().unwrap());
                 matrix_stack.push(translate(2.72, 0.85, -0.73) * rotate(&Vector3::new(-1.0, 0.0, 0.0), arm_angle));
                 let arm_right_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(arm_right.vertices.clone())).unwrap();
                 target.draw(&arm_right_buffer, &arm_right_indices, &program,
@@ -279,7 +272,6 @@ fn main() {
                             transform: to_uniform(matrix_stack.top())},
                             &params).unwrap();
                 {
-                    // matrix_stack.push(rotate(&Vector3::new(-1.0, 0.0, 0.0), arm_angle) * translate(-0.37, 0.16, -3.54) * rotate(&Vector3::new(-1.0, 0.0, 0.0), -arm_angle));
                     matrix_stack.push(translate(-0.37, 0.16, -3.54));
                     let gun_right_buffer = glium::VertexBuffer::new(&display, &obj_to_vertex(transform(rotate(&Vector3::new(0.0, 0.0, 1.0), t * -7.0), gun.vertices.clone()))).unwrap();
                     target.draw(&gun_right_buffer, &gun_indices, &program,
