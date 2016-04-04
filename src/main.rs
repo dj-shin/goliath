@@ -155,7 +155,7 @@ fn main() {
     let leg_lower_right_indices = glium::IndexBuffer::new(&display, glium::index::PrimitiveType::TrianglesList, &leg_lower_right.indices).unwrap();
 
     let vertex_shader_src = r#"
-        #version 330
+        #version 140
         in vec4 position;
         in vec3 normal;
 
@@ -175,7 +175,7 @@ fn main() {
     "#;
 
     let fragment_shader_src = r#"
-        #version 330
+        #version 140
         in vec3 _in_color;
         in vec3 v_normal;
         out vec4 color;
