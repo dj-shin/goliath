@@ -5,5 +5,4 @@ authors = ["LastOne817 <lastone817@naver.com>"]
 
 [dependencies]
 glium = "*"
-cgmath = "*"
-obj-rs = "0.4"
+glium-math = { git = "https://github.com/LastOne817/glium-math.git" }
