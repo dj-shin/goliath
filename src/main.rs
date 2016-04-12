@@ -167,10 +167,10 @@ fn main() {
 
         let light = [1.0, 0.0, 0.0f32];
 
-        // body_lower
-        let x_circle = glium::VertexBuffer::new(&display, &circle(view_center, Vector3::new(1.0, 0.0, 0.0), 7.0)).unwrap();
-        let y_circle = glium::VertexBuffer::new(&display, &circle(view_center, Vector3::new(0.0, 1.0, 0.0), 7.0)).unwrap();
-        let z_circle = glium::VertexBuffer::new(&display, &circle(view_center, Vector3::new(0.0, 0.0, 1.0), 7.0)).unwrap();
+        let ratio = (3.141592f32 / 6.0).tan() / (fov / 2.0).tan() * 15.0 / (view_center - cam_pos).abs();
+        let x_circle = glium::VertexBuffer::new(&display, &circle(view_center, Vector3::new(1.0, 0.0, 0.0), 7.0 / ratio)).unwrap();
+        let y_circle = glium::VertexBuffer::new(&display, &circle(view_center, Vector3::new(0.0, 1.0, 0.0), 7.0 / ratio)).unwrap();
+        let z_circle = glium::VertexBuffer::new(&display, &circle(view_center, Vector3::new(0.0, 0.0, 1.0), 7.0 / ratio)).unwrap();
         let x_line = glium::VertexBuffer::new(&display, &vec![
                                               ModelVertex { position: Vector3::new(-2048.0, 0.0, 0.0), normal: Vector3::zero() },
                                               ModelVertex { position: Vector3::new( 2048.0, 0.0, 0.0), normal: Vector3::zero() }
@@ -211,6 +211,7 @@ fn main() {
                     transform: Matrix4::one()},
                     &params).unwrap();
 
+        // body_lower
         matrix_stack.push(Matrix4::translate(0.0, 0.0, 0.0));
         target.draw(&body_lower_buffer, &body_lower_indices, &program,
                     &uniform! { view: view, perspective: perspective, in_color: [0.0, 0.2, 0.2f32], u_light: light,
@@ -411,8 +412,8 @@ fn main() {
         match state {
             MouseState::Released => (),
             MouseState::LClicked(x_clk, y_clk) => {
-                let v1 = screen2ball(perspective, view, x_clk, y_clk, width, height, cam_pos, view_center, 7.0);
-                let v2 = screen2ball(perspective, view, x, y, width, height, cam_pos, view_center, 7.0);
+                let v1 = screen2ball(perspective, view, x_clk, y_clk, width, height, cam_pos, view_center, 7.0 / ratio);
+                let v2 = screen2ball(perspective, view, x, y, width, height, cam_pos, view_center, 7.0 / ratio);
                 if v1 != v2 {
                     let v1 = v1 - view_center;
                     let v2 = v2 - view_center;
