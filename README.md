@@ -4,7 +4,7 @@
 
 ### Recommended Environment
   - Ubuntu 14.04.3 LTS
-  - Graphic card supports GLSL >= 3.3
+  - Graphic card supports GLSL >= 1.3
 
 ### How to Execute
   1. [Install Rust](https://www.rust-lang.org/downloads.html) (Simply type `curl -sSf https://static.rust-lang.org/rustup.sh | sh` in terminal)
@@ -13,6 +13,9 @@
   4. `cargo run`
 
 ### Controls
-  - Left, Right to rotate body
-  - Up, Down to rotate arm
-  - A, D to rotate camera
+  - Drag with Left Button : Rotate the view
+  - Drag with Right Button : Translate the view
+  - Up, Down arrow : Dolly in/out
+  - Page up, Page down : Zoom in/out
+  - Space : Show all
+  - Left Shift + Left Click : Seek
