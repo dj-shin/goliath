@@ -63,6 +63,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "cgmath"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "num 0.1.31 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rustc-serialize 0.3.19 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "cocoa"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -216,8 +226,9 @@ dependencies = [
 [[package]]
 name = "glium-math"
 version = "0.1.0"
-source = "git+https://github.com/LastOne817/glium-math.git#1f851cef664c51a9eefc47813695daddba3af0b3"
+source = "git+https://github.com/LastOne817/glium-math.git#770b7afd1802b196c0d49bfd6570420b556fd856"
 dependencies = [
+ "cgmath 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "glium 0.13.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "obj-rs 0.4.15 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -312,6 +323,15 @@ dependencies = [
  "kernel32-sys 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "winapi 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "num"
+version = "0.1.31"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rustc-serialize 0.3.19 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

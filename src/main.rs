@@ -83,7 +83,7 @@ fn main() {
     let (leg_lower_right_buffer, leg_lower_right_indices) = load_object(&display, "./models/leg_lower_right.obj");
 
     let vertex_shader_src = r#"
-        #version 330
+        #version 130
         in vec3 position;
         in vec3 normal;
 
@@ -103,7 +103,7 @@ fn main() {
     "#;
 
     let fragment_shader_src = r#"
-        #version 330
+        #version 130
         in vec3 _in_color;
         in vec3 v_normal;
         out vec4 color;
@@ -117,7 +117,7 @@ fn main() {
     "#;
 
     let ui_fragment_shader_src = r#"
-        #version 330
+        #version 130
         in vec3 _in_color;
         in vec3 v_normal;
         out vec4 color;
@@ -143,6 +143,7 @@ fn main() {
     let center: Vector3 = Vector3::zero();
     let mut cam_pos = Vector3::new(0.0, 0.0, -15.0);
     let mut view_center = center;
+    let mut view_up = Vector3::new(0.0, 1.0, 0.0);
     let mut shift: bool = false;
 
 
@@ -151,7 +152,7 @@ fn main() {
         let (width, height) = target.get_dimensions();
         let perspective = gmath::view::perspective(width, height, fov);
         let view = gmath::view::view_matrix(&cam_pos, &(view_center - cam_pos).normalize(),
-                                            &Vector3::cross(Vector3::cross(view_center - cam_pos, Vector3::new(0.0, 1.0, 0.0)), view_center - cam_pos).normalize());
+                                            &view_up);
 
         let params = glium::DrawParameters {
             depth: glium::Depth {
@@ -365,9 +366,11 @@ fn main() {
                             }
                         },
                         VirtualKeyCode::Space => {
-                            let ratio = (width as f32 / (2.0 * (fov / 2.0).tan())) / (width as f32 / (2.0 * (3.141592 / 6.0 as f32).tan()));
+                            fov = 3.141592 / 3.0;
                             view_center = center;
-                            cam_pos = - 15.0 * ratio * (view_center - cam_pos).normalize();
+                            // cam_pos = - 15.0 * (view_center - cam_pos).normalize();
+                            view_up = Vector3::new(0.0, 1.0, 0.0);
+                            cam_pos = Vector3::new(0.0, 0.0, -15.0);
                         },
                         VirtualKeyCode::LShift | VirtualKeyCode::RShift => {
                             shift = true;
@@ -417,6 +420,7 @@ fn main() {
                     cam_pos = (Matrix4::translate(view_center.x, view_center.y, view_center.z) * q
                                * Matrix4::translate(-view_center.x, -view_center.y, -view_center.z) * cam_pos.extend())
                         .truncate();
+                    view_up = (q * view_up.extend()).truncate();
                 }
                 state = MouseState::LClicked(x, y);
             },
@@ -447,8 +451,8 @@ fn screen2ball(perspective: Matrix4, view: Matrix4, x: i32, y: i32, width: u32, 
         return h - v * len.sqrt();
     }
     else {
-        // return center + (h - center).normalize() * r;
-        return screen2zplane(perspective, view, x, y, width, height, center);
+        return center + (h - center).normalize() * r;
+        // return screen2zplane(perspective, view, x, y, width, height, center);
     }
 }
 
